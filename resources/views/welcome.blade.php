@@ -37,34 +37,65 @@
 
 
                 <div class="row justify-content-center flex-wrap" style="width:80%">
+
                     @if (isset($Tasks))
                         <div>
-                        <a href="/1/name/asc">
-                            Отсортировать список по полю “имя пользователя” по возрастанию
-                        </a><br>
-                        <a href="/1/name/desc">
-                            Отсортировать список по полю “имя пользователя” по убыванию
-                        </a><br>
-                        <a href="/1/email/asc">
-                            Отсортировать список по полю “email пользователя” по возрастанию
-                        </a><br>
-                        <a href="/1/email/desc">
-                            Отсортировать список по полю “email пользователя” по убыванию
-                        </a><br>
-                        <a href="/1/done/desc">
-                            Отсортировать список по полю “статус” по возрастанию
-                        </a><br>
-                        <a href="/1/done/desc">
-                            Отсортировать список по полю “статус” по убыванию
-                        </a><br>
                         <table class="table table-colaps">
                             <tr>
-                                <td>id</td>
-                                <td>имени пользователя</td>
-                                <td>email</td>
-                                <td>текста задачи</td>
-                                <td>выполнено</td>
-                                <td>отредактировано администратором</td>
+                                <td>
+                                    @if (isset($_GET['how']) && $_GET['how']=='asc' && $_GET['order_by']=='id')
+                                        <a href="/?order_by=id&how=desc">id &#8593</a>
+                                    @elseif (isset($_GET['how']) && $_GET['how']=='desc' && $_GET['order_by']=='id')
+                                        <a href="/?order_by=id&how=asc">id &#8595</a>
+                                    @else
+                                        <a href="/?order_by=id&how=desc">id  &#8593</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (isset($_GET['how']) && $_GET['how']=='asc' && $_GET['order_by']=='name')
+                                        <a href="/?order_by=name&how=desc">имени пользователя &#8593</a>
+                                    @elseif (isset($_GET['how']) && $_GET['how']=='desc' && $_GET['order_by']=='name')
+                                        <a href="/?order_by=name&how=asc">имени пользователя &#8595</a>
+                                    @else
+                                        <a href="/?order_by=name&how=desc">имени пользователя  &#8593</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (isset($_GET['how']) && $_GET['how']=='asc' && $_GET['order_by']=='email')
+                                        <a href="/?order_by=email&how=desc">email &#8593</a>
+                                    @elseif (isset($_GET['how']) && $_GET['how']=='desc' && $_GET['order_by']=='email')
+                                        <a href="/?order_by=email&how=asc">email &#8595</a>
+                                    @else
+                                        <a href="/?order_by=email&how=desc">email  &#8593</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (isset($_GET['how']) && $_GET['how']=='asc' && $_GET['order_by']=='task')
+                                        <a href="/?order_by=task&how=desc">текста задачи &#8593</a>
+                                    @elseif (isset($_GET['how']) && $_GET['how']=='desc' && $_GET['order_by']=='task')
+                                        <a href="/?order_by=task&how=asc">текста задачи &#8595</a>
+                                    @else
+                                        <a href="/?order_by=task&how=desc">текста задачи  &#8593</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (isset($_GET['how']) && $_GET['how']=='asc' && $_GET['order_by']=='done')
+                                        <a href="/?order_by=done&how=desc">выполнено &#8593</a>
+                                    @elseif (isset($_GET['how']) && $_GET['how']=='desc' && $_GET['order_by']=='done')
+                                        <a href="/?order_by=done&how=asc">выполнено &#8595</a>
+                                    @else
+                                        <a href="/?order_by=done&how=desc">выполнено &#8593</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (isset($_GET['how']) && $_GET['how']=='asc' && $_GET['order_by']=='changed')
+                                        <a href="/?order_by=changed&how=desc">отредактировано администратором &#8593</a>
+                                    @elseif (isset($_GET['how']) && $_GET['how']=='desc' && $_GET['order_by']=='changed')
+                                        <a href="/?order_by=changed&how=asc">отредактировано администратором &#8595</a>
+                                    @else
+                                        <a href="/?order_by=changed&how=desc">отредактировано администратором  &#8593</a>
+                                    @endif
+                                </td>
                             </tr>
                             @foreach($Tasks as $task)
                                 <tr>
@@ -72,14 +103,21 @@
                                     <td>{{ $task->name }}</td>
                                     <td>{{ $task->email }}</td>
                                     <td>{{ $task->task }}</td>
-                                    <td>@if($task->done)выполнено@endif</td>
-                                    <td>@if($task->changed)отредактировано администратором@endif</td>
+                                    <td>@if ($task->done)выполнено@endif</td>
+                                    <td>@if ($task->changed)отредактировано администратором@endif</td>
                                 </tr>
                             @endforeach
                         </table>
-                        @for ($i = 1; $i <= $totalPages; $i++)
-                            <a href="/{{ $i }}"> {{ $i }}</a>
-                        @endfor
+                            {{ $Tasks->links() }}
+{{--                        @for ($i = 1; $i <= $totalPages; $i++)--}}
+{{--                            @if (isset($_GET['order_by']) && isset($_GET['how']))--}}
+{{--                                    <a href="/?order_by={{ $_GET['order_by'] }}&how={{ $_GET['how'] }}&page={{ $i }}"> {{ $i }}</a>--}}
+{{--                            @elseif (isset($_GET['order_by']))--}}
+{{--                                    <a href="/?order_by={{ $_GET['order_by'] }}&how=asc&page={{ $i }}"> {{ $i }}</a>--}}
+{{--                            @else--}}
+{{--                                    <a href="/?order_by=id&how=asc&page={{ $i }}"> {{ $i }}</a>--}}
+{{--                            @endif--}}
+{{--                        @endfor--}}
                     @endif
                 </div>
                     <h2 align="center">Add Task</h2>
@@ -87,23 +125,25 @@
                         @csrf
                         <label for="exampleInputEmail1">Email address</label>
                         <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                        @if ($errors->has('email'))
+                            <p class="text-danger">{{ $errors->first('email') }}</p>
+                        @endif
                         <label for="exampleInputPassword1">Name</label>
                         <input type="text" name="name" class="form-control" id="exampleInputPassword1" placeholder="Name">
+                        @if ($errors->has('name'))
+                            <p class="text-danger">{{ $errors->first('name') }}</p>
+                        @endif
                         <label for="exampleInputPassword1">Task</label>
                         <input type="text" name="task" class="form-control" id="exampleInputPassword1" placeholder="Task">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        @if ($errors->has('task'))
+                            <p class="text-danger">{{ $errors->first('task') }}</p>
+                        @endif
+                        <br><button type="submit" class="btn btn-primary">Submit</button>
                     </form>
-                        @if (isset($message))
-                           <h1> {{ $message }}</h1>
-                        @endif
-                        @if ($errors->any())
-                            @foreach ($errors->all() as $error)
-                                <h1>{{ $error }}</h1>
-                            @endforeach
-                        @endif
+                    @if ($message)
+                        <p class="text-success">{{ $message }}</p>
+                    @endif
                 </div>
-
-
         </div>
     </body>
 </html>

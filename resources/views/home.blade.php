@@ -10,7 +10,8 @@
             <td>имени пользователя</td>
             <td>email</td>
             <td>текста задачи</td>
-            <td>редактировать/выполнено</td>
+            <td>выполнено</td>
+            <td>редактировать </td>
         </tr>
         @foreach($Tasks as $task)
             <tr>
@@ -18,14 +19,16 @@
                 <td>{{ $task->name }}</td>
                 <td>{{ $task->email }}</td>
                 <td>{{ $task->task }}</td>
+                <td><input type="checkbox" class="change" data-id="{{ $task->id }}"  @if($task->done) checked @endif>
+                    <input type="hidden" class="token" value="{{ @csrf_token() }}">
+                </td>
                 <td>
                     <form action="/change" method="post">
                         @method('PUT')
                         @csrf
-                        выполнено    <input type="checkbox" name="done"  @if($task->done) checked @endif>
                         <input type="text" name="text">
                         <input type="hidden" name="id" value="{{$task->id}}">
-                        <button class="change btn btn-success" type="submit">редактировать</button>
+                        <button class="btn btn-success" type="submit">редактировать</button>
                     </form>
                 </td>
 

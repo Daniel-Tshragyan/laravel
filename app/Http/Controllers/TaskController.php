@@ -12,11 +12,21 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(tasks $tasks,Request $request,$page=1,$sort='id',$how = 'asc',$message = NULL)
+    public function index(Request $request,tasks $tasks,$message = NULL)
     {
-        $allTasks = $tasks::orderBy($sort, $how)->paginate(3,'*','',$page);
-        $totalpages =  $allTasks->lastPage();
-        return view("welcome",['Tasks'=>$allTasks,"totalPages"=>$totalpages,'message'=>$message]);
+        $order_by ='id';
+        $how = 'asc';
+        if ($request->input("order_by")){
+            $order_by = $request->input("order_by");
+        }
+
+        if($request->input("how")){
+            $how = $request->input("how");
+        }
+
+        $allTasks = $tasks::orderBy($order_by,$how)->paginate(3);
+        $allTasks->withPath("/?order_by={$order_by}&&how={$how}");
+        return view("welcome",['Tasks'=>$allTasks,'message'=>$message]);
     }
 
     /**
@@ -35,7 +45,8 @@ class TaskController extends Controller
         $tasks->email = $request->input("email");
         $tasks->task = $request->input("task");
         $tasks->save();
-        return $this->index($tasks, $request,1, 'id', 'asc', $mesagge = "Task Added");
+        $message = "Task Added";
+        return $this->index( $request,$tasks,$message);
     }
 
     /**
@@ -66,9 +77,17 @@ class TaskController extends Controller
      * @param  \App\Models\tasks  $tasks
      * @return \Illuminate\Http\Response
      */
-    public function edit(tasks $tasks)
+    public function edit(Request $request,tasks $tasks)
     {
-        //
+        $done = '';
+        if ($request->input("done") == 'on') {
+            $done = true;
+        } else {
+            $done = false;
+        }
+        $tasks::where('id', $request->input("id"))
+            ->update(['done'=>$done]);
+        return true;
     }
 
     /**
@@ -83,14 +102,9 @@ class TaskController extends Controller
         $request->validate([
             'text' => ['required']
         ]);
-        $done = '';
-        if($request->input("done") == 'on'){
-            $done = true;
-        }else{
-            $done = false;
-        }
+
         $tasks::where('id', $request->input("id"))
-        ->update(['task' => $request->input("text"),'changed' => true,'done'=>$done]);
+        ->update(['task' => $request->input("text"),'changed' => true]);
         return redirect("/home");
     }
 
