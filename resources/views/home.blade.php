@@ -13,9 +13,9 @@
                         <td>
                             <a href=
                                @if (Request::get('how') &&  Request::get('how')=='asc' ||  !Request::get('how'))
-                                   "{{ route('mainpage',['order_by' => $key, 'how' => 'desc'])  }}"
+                                   "{{ route('home',['order_by' => $key, 'how' => 'desc'])  }}"
                             @elseif (Request::get('how') &&  Request::get('how')=='desc')
-                                "{{ route('mainpage',['order_by' => $key, 'how' => 'asc'])  }}"
+                                "{{ route('home',['order_by' => $key, 'how' => 'asc'])  }}"
                             @endif
                             >{{$val}}
                             </a>
