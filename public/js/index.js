@@ -1,7 +1,17 @@
 $(".change").click(function(){
+    var done
+
+    var attr = $(this).attr('checked')
+    if (typeof attr !== 'undefined' && attr !== false) {
+        $(this).removeAttr('checked')
+        var done = 'of'
+    }else{
+         var done = 'on'
+    }
     var id = $(this).attr("data-id")
-    var done = $(this).val()
     var token = $(".token").val()
+    console.log(done)
+
     $.ajax({
         url: "/changedone",
         type:"put",

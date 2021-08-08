@@ -10002,3 +10002,9 @@ h3 {
     border-color: #dee2e6;
   }
 }
+.hidden{
+    display:none
+}
+tr,td{
+    text-align:center;
+}

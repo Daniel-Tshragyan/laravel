@@ -15,12 +15,19 @@ use App\Http\Controllers\TaskController;
 |
 */
 
-Route::post('/add', [TaskController::class,"create"]);
-Route::put("/change",[TaskController::class,"update"])->middleware('auth');
-Route::put("/changedone",[TaskController::class,"edit"])->middleware('auth');
+Route::post('/add', [TaskController::class, 'create'])->name('addtask');
+Route::put('/change', [TaskController::class, 'update'])->middleware('auth');
+Route::put('/changedone', [TaskController::class, 'edit'])->middleware('auth');
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/{page?}/{sort?}/{how?}', [TaskController::class,"index"])->name("mainpage");
+Route::post('/changetasktekst', [TaskController::class, 'changetekst'])->middleware('auth')->name('changetekst');
+Route::get('/changetask/{id}', [TaskController::class, 'getOne'])->middleware('auth')->name('changetask');
+Route::post('/addhome', [App\Http\Controllers\HomeController::class, 'create'])->middleware('auth')->name('addtaskhome');
+
+Route::get('/', [TaskController::class, 'index'])->name('mainpage');
+
+
+
